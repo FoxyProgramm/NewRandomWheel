@@ -1,0 +1,423 @@
+[gd_scene load_steps=10 format=3 uid="uid://csnf6j0m0e8iu"]
+
+[ext_resource type="Script" uid="uid://n1aeksdjoxa2" path="res://Scripts/Wheel/Main.gd" id="1_r150o"]
+[ext_resource type="Script" uid="uid://by2j7e10lh51f" path="res://Scripts/Wheel/Wheel.gd" id="2_idj7w"]
+[ext_resource type="Theme" uid="uid://b17doppsnjpxe" path="res://Themes/Separator.tres" id="3_kln2b"]
+[ext_resource type="Script" uid="uid://nv8otsdpg3yp" path="res://Scripts/WindowBase.gd" id="4_rgh2o"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_idj7w"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rgh2o"]
+bg_color = Color(0.07843137, 0.07843137, 0.07843137, 0.3372549)
+border_width_left = 8
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.8, 0.8, 0.8, 0)
+
+[sub_resource type="Theme" id="Theme_pbw6q"]
+TabContainer/styles/panel = SubResource("StyleBoxFlat_rgh2o")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kln2b"]
+
+[sub_resource type="Theme" id="Theme_rgh2o"]
+LineEdit/styles/focus = SubResource("StyleBoxEmpty_kln2b")
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_r150o")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+size = Vector2i(1024, 1024)
+render_target_update_mode = 4
+
+[node name="Wheel" type="Node2D" parent="SubViewport"]
+unique_name_in_owner = true
+position = Vector2(512, 512)
+script = ExtResource("2_idj7w")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_behavior_recursive = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="Control/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TopBar" type="PanelContainer" parent="Control/VBoxContainer"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/TopBar"]
+layout_mode = 2
+focus_behavior_recursive = 2
+theme_override_constants/separation = 8
+
+[node name="Control" type="Control" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+
+[node name="MenuButton" type="MenuButton" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+text = "Save Preset"
+item_count = 2
+popup/item_0/text = "Empty Slot"
+popup/item_0/id = 0
+popup/item_1/text = "Empty Slot"
+popup/item_1/id = 1
+
+[node name="VSeparator" type="VSeparator" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_kln2b")
+
+[node name="MenuButton2" type="MenuButton" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+text = "Load Preset"
+item_count = 2
+popup/item_0/text = "Empty Slot"
+popup/item_0/id = 0
+popup/item_1/text = "Empty Slot"
+popup/item_1/id = 1
+
+[node name="VSeparator2" type="VSeparator" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_kln2b")
+
+[node name="TopBarSettingsButton" type="Button" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+focus_behavior_recursive = 2
+text = "Settings"
+flat = true
+
+[node name="VSeparator3" type="VSeparator" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_kln2b")
+
+[node name="TopBarFunctionsButton" type="MenuButton" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Functions"
+
+[node name="VSeparator4" type="VSeparator" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
+layout_mode = 2
+theme = ExtResource("3_kln2b")
+
+[node name="Content" type="Control" parent="Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/Content"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="AspectRatioContainer" parent="Control/VBoxContainer/Content/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/Content/HBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="TextureRect" type="TextureRect" parent="Control/VBoxContainer/Content/HBoxContainer/MarginContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = SubResource("ViewportTexture_idj7w")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Control" type="Control" parent="Control/VBoxContainer/Content/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/VBoxContainer/Content/HBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer"]
+layout_mode = 2
+
+[node name="AddPart" type="Button" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Add Part"
+
+[node name="RemovePart" type="Button" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Remove Part"
+
+[node name="Footer" type="PanelContainer" parent="Control/VBoxContainer"]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+metadata/_edit_use_anchors_ = true
+
+[node name="Settings" type="Window" parent="."]
+oversampling_override = 1.0
+title = "Settings"
+initial_position = 1
+size = Vector2i(600, 400)
+visible = false
+exclusive = true
+min_size = Vector2i(100, 100)
+script = ExtResource("4_rgh2o")
+
+[node name="Control" type="Control" parent="Settings"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabContainer" type="TabContainer" parent="Settings/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_pbw6q")
+current_tab = 0
+tab_focus_mode = 0
+
+[node name="TabBar" type="TabBar" parent="Settings/Control/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Settings/Control/TabContainer/TabBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "prop"
+
+[node name="SpinBox" type="SpinBox" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "prop"
+
+[node name="CheckButton" type="CheckButton" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "prop"
+
+[node name="OptionButton" type="OptionButton" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 10
+item_count = 2
+popup/item_0/text = "Item 1"
+popup/item_0/id = 0
+popup/item_1/text = "Item 2"
+popup/item_1/id = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "prop"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Color"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "prop"
+
+[node name="Functions" type="Node" parent="."]
+
+[node name="HUE" type="Window" parent="Functions"]
+oversampling_override = 1.0
+title = "HUE Redraw"
+position = Vector2i(50, 50)
+size = Vector2i(300, 200)
+visible = false
+popup_window = true
+min_size = Vector2i(200, 100)
+script = ExtResource("4_rgh2o")
+
+[node name="Control" type="Control" parent="Functions/HUE"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Functions/HUE/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Functions/HUE/Control/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Functions/HUE/Control/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Functions/HUE/Control/ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Main color"
+
+[node name="FunctionHUEColor" type="ColorPickerButton" parent="Functions/HUE/Control/ScrollContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+focus_mode = 0
+text = "Aboba"
+color = Color(0.8800369, 0.46302468, 0.6210128, 1)
+edit_alpha = false
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Functions/HUE/Control/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Functions/HUE/Control/ScrollContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "HUE step"
+
+[node name="FunctionHUEStep" type="SpinBox" parent="Functions/HUE/Control/ScrollContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 10
+theme = SubResource("Theme_rgh2o")
+min_value = -1.0
+max_value = 1.0
+step = 0.020000000004074536
+
+[node name="FunctionHUERedraw" type="Button" parent="Functions/HUE/Control/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 0
+text = "Redraw"
+
+[node name="RandomColors" type="Window" parent="Functions"]
+oversampling_override = 1.0
+title = "Random Colors"
+position = Vector2i(0, 36)
+size = Vector2i(200, 100)
+visible = false
+script = ExtResource("4_rgh2o")
+
+[node name="MarginContainer" type="MarginContainer" parent="Functions/RandomColors"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 15
+
+[node name="Control" type="Control" parent="Functions/RandomColors"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="Functions/RandomColors/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Functions/RandomColors/Control/CenterContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+ratio = 0.5
+
+[node name="FunctionsRandomizeColors" type="Button" parent="Functions/RandomColors/Control/CenterContainer/AspectRatioContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Randomize"
