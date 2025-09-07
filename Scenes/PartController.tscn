@@ -1,0 +1,82 @@
+[gd_scene load_steps=3 format=3 uid="uid://cgjs7ly17yoan"]
+
+[ext_resource type="Script" uid="uid://dox6t7vov8i7n" path="res://Scripts/Classes/PartController.gd" id="1_4co76"]
+[ext_resource type="Theme" uid="uid://b17doppsnjpxe" path="res://Themes/Separator.tres" id="2_ki4ev"]
+
+[node name="PanelContainer" type="PanelContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4co76")
+
+[node name="MC" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="HFC" type="HFlowContainer" parent="MC"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MC/HFC"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MC/HFC/HBoxContainer"]
+layout_mode = 2
+text = "Name:"
+
+[node name="LineEdit" type="LineEdit" parent="MC/HFC/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="MC/HFC/HBoxContainer"]
+layout_mode = 2
+focus_mode = 0
+text = "Expand"
+
+[node name="VSeparator" type="VSeparator" parent="MC/HFC"]
+layout_mode = 2
+theme = ExtResource("2_ki4ev")
+
+[node name="WeightBlock" type="HBoxContainer" parent="MC/HFC"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MC/HFC/WeightBlock"]
+layout_mode = 2
+text = "Weight:"
+
+[node name="Weight" type="SpinBox" parent="MC/HFC/WeightBlock"]
+layout_mode = 2
+size_flags_horizontal = 8
+min_value = 1.0
+value = 1.0
+
+[node name="VSeparator2" type="VSeparator" parent="MC/HFC"]
+layout_mode = 2
+theme = ExtResource("2_ki4ev")
+
+[node name="ColorBlock" type="HBoxContainer" parent="MC/HFC"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MC/HFC/ColorBlock"]
+layout_mode = 2
+text = "Color:"
+
+[node name="Color" type="ColorPickerButton" parent="MC/HFC/ColorBlock"]
+layout_mode = 2
+size_flags_horizontal = 10
+focus_mode = 0
+text = "Aboba"
+
+[node name="VSeparator3" type="VSeparator" parent="MC/HFC"]
+layout_mode = 2
+theme = ExtResource("2_ki4ev")
+
+[node name="DeleteButton" type="Button" parent="MC/HFC"]
+layout_mode = 2
+focus_mode = 0
+text = "Remove"

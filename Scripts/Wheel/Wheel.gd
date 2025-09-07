@@ -7,7 +7,7 @@ var wheel_radius:float = 500
 
 var polygon_step:float = 0.1
 
-var parts:Array[Part] = [Global.create_part()]
+var parts:Array[Part] = []
 
 func calculate_parts() -> void:
 	var full_weight:float = 0
@@ -51,13 +51,14 @@ func hue_redraw(color:Color, step:float) -> void:
 		tween.tween_property(part, "color", color, time_to_change).set_trans(Tween.TRANS_QUAD)
 		await get_tree().create_timer(time_for_part).timeout
 
-func create_beauty_part() -> void:
+func create_beauty_part() -> Part:
 	var new_part = Global.create_part()
 	new_part.weight_changed.connect(calculate_parts)
 	new_part.weight = 0.001
 	parts.append(new_part)
 	var tween := create_tween()
 	tween.tween_property(new_part, "weight", 1, 0.6).set_trans(Tween.TRANS_CUBIC)
+	return new_part
 
 func remove_beauty_part(part:Part, last_one:bool = false) -> void:
 	if last_one:
@@ -72,23 +73,20 @@ func remove_beauty_part(part:Part, last_one:bool = false) -> void:
 	tween.tween_property(part, "weight", 0.001, 0.6).set_trans(Tween.TRANS_QUAD)
 	await tween.finished
 	parts.erase(part)
+	part.weight_changed.disconnect(calculate_parts)
 	Global.remove_part(part)
 	calculate_parts()
 
-func _ready() -> void:
-	#parts.append(Global.create_part())
-	calculate_parts()
-	set_process_input(true)
-	print("reate")
+func change_beauty_weight(part:Part, weight:float) -> void:
+	if part.tween and part.tween.is_running(): part.tween.kill()
+	part.tween = create_tween()
+	part.tween.tween_property(part, "weight", weight, 0.6).set_trans(Tween.TRANS_QUAD)
+	
+
+#func _ready() -> void:
+	#calculate_parts()
 
 func _draw() -> void:
 	for part in parts:
 		if part.points.size() < 3: continue
 		draw_colored_polygon(part.points, part.color)
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("add_part"):
-		create_beauty_part()
-		print("add")
-	if event.is_action_pressed("remove_part"):
-		remove_beauty_part(null, true)

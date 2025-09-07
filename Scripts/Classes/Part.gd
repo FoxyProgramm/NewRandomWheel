@@ -17,3 +17,6 @@ signal weight_changed
 var points:PackedVector2Array
 
 var on_delete:bool = false
+
+var weight_tween:Tween
+var color_tween:Tween

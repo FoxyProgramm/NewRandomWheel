@@ -9,7 +9,7 @@
 viewport_path = NodePath("SubViewport")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rgh2o"]
-bg_color = Color(0.07843137, 0.07843137, 0.07843137, 0.3372549)
+bg_color = Color(0.0784314, 0.0784314, 0.0784314, 0.337255)
 border_width_left = 8
 border_width_right = 10
 border_width_bottom = 10
@@ -34,6 +34,7 @@ script = ExtResource("1_r150o")
 
 [node name="SubViewport" type="SubViewport" parent="."]
 transparent_bg = true
+screen_space_aa = 1
 size = Vector2i(1024, 1024)
 render_target_update_mode = 4
 
@@ -49,19 +50,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-focus_behavior_recursive = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Control"]
+[node name="ColorRect" type="ColorRect" parent="Control"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-
-[node name="Control" type="Control" parent="Control/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
+color = Color(0.201527, 0.201527, 0.201527, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Control"]
 layout_mode = 1
@@ -79,7 +76,6 @@ metadata/_edit_use_anchors_ = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/TopBar"]
 layout_mode = 2
-focus_behavior_recursive = 2
 theme_override_constants/separation = 8
 
 [node name="Control" type="Control" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
@@ -116,7 +112,6 @@ theme = ExtResource("3_kln2b")
 unique_name_in_owner = true
 layout_mode = 2
 focus_mode = 0
-focus_behavior_recursive = 2
 text = "Settings"
 flat = true
 
@@ -175,18 +170,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer"]
 layout_mode = 2
 
-[node name="AddPart" type="Button" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/VBoxContainer"]
+[node name="PartsContainer" type="VBoxContainer" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AddPart" type="Button" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/ScrollContainer/PartsContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Add Part"
-
-[node name="RemovePart" type="Button" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Remove Part"
 
 [node name="Footer" type="PanelContainer" parent="Control/VBoxContainer"]
 custom_minimum_size = Vector2(0, 80)
@@ -195,7 +191,6 @@ size_flags_horizontal = 3
 metadata/_edit_use_anchors_ = true
 
 [node name="Settings" type="Window" parent="."]
-oversampling_override = 1.0
 title = "Settings"
 initial_position = 1
 size = Vector2i(600, 400)
@@ -306,10 +301,20 @@ layout_mode = 2
 layout_mode = 2
 text = "prop"
 
+[node name="TextEnpand" type="Window" parent="."]
+title = "Text"
+visible = false
+
+[node name="TextEdit" type="TextEdit" parent="TextEnpand"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="Functions" type="Node" parent="."]
 
 [node name="HUE" type="Window" parent="Functions"]
-oversampling_override = 1.0
 title = "HUE Redraw"
 position = Vector2i(50, 50)
 size = Vector2i(300, 200)
@@ -352,7 +357,7 @@ layout_mode = 2
 size_flags_horizontal = 10
 focus_mode = 0
 text = "Aboba"
-color = Color(0.8800369, 0.46302468, 0.6210128, 1)
+color = Color(0.880037, 0.463025, 0.621013, 1)
 edit_alpha = false
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Functions/HUE/Control/ScrollContainer/VBoxContainer"]
@@ -369,7 +374,7 @@ size_flags_horizontal = 10
 theme = SubResource("Theme_rgh2o")
 min_value = -1.0
 max_value = 1.0
-step = 0.020000000004074536
+step = 0.02
 
 [node name="FunctionHUERedraw" type="Button" parent="Functions/HUE/Control/ScrollContainer/VBoxContainer"]
 unique_name_in_owner = true
@@ -378,7 +383,6 @@ focus_mode = 0
 text = "Redraw"
 
 [node name="RandomColors" type="Window" parent="Functions"]
-oversampling_override = 1.0
 title = "Random Colors"
 position = Vector2i(0, 36)
 size = Vector2i(200, 100)
