@@ -4,13 +4,18 @@ signal request_to_delete
 
 var linked_part:Part
 
-@onready var weight_box:SpinBox = $MC/HFC/WeightBlock/Weight
+@onready var weight_box:SpinBox          = $MC/HFC/WeightBlock/Weight
 @onready var color_box:ColorPickerButton = $MC/HFC/ColorBlock/Color
+@onready var label_name:LineEdit         = $MC/HFC/HBoxContainer/LineEdit
 
 func _ready() -> void:
 	if linked_part:
 		$MC/HFC/DeleteButton.pressed.connect(request_to_delete.emit)
+		label_name.text_changed.connect(func(text:String):
+			linked_part.name = text
+		)
 		color_box.color = linked_part.color
+		label_name.text = linked_part.name
 		weight_box.value_changed.connect(func(value:float):
 			if linked_part.weight_tween and linked_part.weight_tween.is_running(): linked_part.weight_tween.kill()
 			linked_part.weight_tween = create_tween()

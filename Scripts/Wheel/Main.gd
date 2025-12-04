@@ -1,5 +1,7 @@
 extends Control
 
+signal winner_screen_clicked
+
 var part_controller_scene:PackedScene = load("res://Scenes/PartController.tscn")
 var time_to_change_color:float = 0.6
 
@@ -47,3 +49,45 @@ func _ready() -> void:
 	for child:Window in $Functions.get_children():
 		functions_popup.add_item(child.title)
 	functions_popup.id_pressed.connect(func(idx:int): $Functions.get_child(idx).show() )
+	
+	$WinnerScreen.gui_input.connect(func(e:InputEvent):
+		if e is InputEventMouseButton and e.pressed:
+			winner_screen_clicked.emit()
+	)
+	
+	%StartWheel.pressed.connect(func():
+		var win_score:float = randf()
+		var current_score:float = 0.0
+		var winner:Part
+		for part:Part in %Wheel.parts:
+			if win_score >= current_score and win_score <= (current_score + part.weight_linear):
+				winner = part
+				break
+			current_score += part.weight_linear
+		%Wheel.rotation -= PI*16
+		%WinnerText.material.set('shader_parameter/y_offset', 48)
+		%ActualWinner.material.set('shader_parameter/y_offset', 64)
+		%ActualWinner.text = '4a6=F#O31oaF4'
+		var wheel_tween:Tween = create_tween()
+		wheel_tween.tween_property(%Wheel, 'rotation', (win_score*PI*2)-(PI/2), 1.5).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.tween_callback($WinnerScreen.show)
+		wheel_tween.tween_property($WinnerScreen/BG, 'color', Color(0,0,0,0.5), 0.7).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.tween_property(%WinnerText, 'modulate', Color.WHITE, 0.7).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.parallel().tween_property(%WinnerText.material, 'shader_parameter/y_offset', 24, 0.5).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.tween_interval(0.2)
+		wheel_tween.tween_property(%ActualWinner, 'text', winner.name, 1.0).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.parallel().tween_property(%ActualWinner, 'modulate', Color.WHITE, 1.0).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.parallel().tween_property(%WinnerText.material, 'shader_parameter/y_offset', 0, 1.3).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.parallel().tween_property(%ActualWinner.material, 'shader_parameter/y_offset', 0, 1.3).set_trans(Tween.TRANS_CUBIC)
+		await wheel_tween.finished
+		await winner_screen_clicked
+		wheel_tween = create_tween()
+		wheel_tween.tween_property(%WinnerText.material, 'shader_parameter/y_offset', -32, 0.5).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.parallel().tween_property(%ActualWinner.material, 'shader_parameter/y_offset', -48, 0.5).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.parallel().tween_property(%WinnerText, 'modulate', Color(0,0,0,0), 0.5).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.parallel().tween_property(%ActualWinner, 'modulate', Color(0,0,0,0), 0.5).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.tween_interval(0.2)
+		wheel_tween.tween_property($WinnerScreen/BG, 'color', Color(0,0,0,0), 0.7).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.tween_callback($WinnerScreen.hide)
+	)
+	

@@ -34,6 +34,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Button" type="Button" parent="MC/HFC/HBoxContainer"]
+visible = false
 layout_mode = 2
 focus_mode = 0
 text = "Expand"

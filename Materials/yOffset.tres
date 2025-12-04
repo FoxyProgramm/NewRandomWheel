@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://ck5fmvx8gc6j1"]
+
+[ext_resource type="Shader" uid="uid://b66hhp185ik2h" path="res://Shaders/yOffset.gdshader" id="1_iyvnf"]
+
+[resource]
+shader = ExtResource("1_iyvnf")
+shader_parameter/y_offset = 0.0

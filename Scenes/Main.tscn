@@ -1,12 +1,49 @@
-[gd_scene load_steps=10 format=3 uid="uid://csnf6j0m0e8iu"]
+[gd_scene load_steps=16 format=3 uid="uid://csnf6j0m0e8iu"]
 
+[ext_resource type="FontFile" uid="uid://042x6l8h7h68" path="res://Fonts/RobotoSlab-VariableFont_wght.ttf" id="1_pbw6q"]
 [ext_resource type="Script" uid="uid://n1aeksdjoxa2" path="res://Scripts/Wheel/Main.gd" id="1_r150o"]
 [ext_resource type="Script" uid="uid://by2j7e10lh51f" path="res://Scripts/Wheel/Wheel.gd" id="2_idj7w"]
 [ext_resource type="Theme" uid="uid://b17doppsnjpxe" path="res://Themes/Separator.tres" id="3_kln2b"]
 [ext_resource type="Script" uid="uid://nv8otsdpg3yp" path="res://Scripts/WindowBase.gd" id="4_rgh2o"]
 
+[sub_resource type="Theme" id="Theme_v1gob"]
+default_font = ExtResource("1_pbw6q")
+default_font_size = 16
+
 [sub_resource type="ViewportTexture" id="ViewportTexture_idj7w"]
 viewport_path = NodePath("SubViewport")
+
+[sub_resource type="Shader" id="Shader_pbw6q"]
+code = "shader_type canvas_item;
+
+uniform float y_offset:hint_range(-64.0, 64.0, 0.01);
+
+void vertex() {
+	VERTEX.y += y_offset;
+}
+
+void fragment() {
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v1gob"]
+shader = SubResource("Shader_pbw6q")
+shader_parameter/y_offset = 0.0
+
+[sub_resource type="Shader" id="Shader_v1gob"]
+code = "shader_type canvas_item;
+
+uniform float y_offset:hint_range(-64.0, 64.0, 0.01);
+
+void vertex() {
+	VERTEX.y += y_offset;
+}
+
+void fragment() {
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jw32o"]
+shader = SubResource("Shader_v1gob")
+shader_parameter/y_offset = 0.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rgh2o"]
 bg_color = Color(0.0784314, 0.0784314, 0.0784314, 0.337255)
@@ -30,6 +67,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = SubResource("Theme_v1gob")
 script = ExtResource("1_r150o")
 
 [node name="SubViewport" type="SubViewport" parent="."]
@@ -173,15 +211,25 @@ grow_vertical = 2
 [node name="ScrollContainer" type="ScrollContainer" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer"]
 layout_mode = 2
 
-[node name="PartsContainer" type="VBoxContainer" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="PartsContainer" type="VBoxContainer" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/ScrollContainer/MarginContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="AddPart" type="Button" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/ScrollContainer/PartsContainer"]
+[node name="AddPart" type="Button" parent="Control/VBoxContainer/Content/HBoxContainer/Control/PanelContainer/ScrollContainer/MarginContainer/PartsContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_mode = 0
 text = "Add Part"
 
 [node name="Footer" type="PanelContainer" parent="Control/VBoxContainer"]
@@ -189,6 +237,77 @@ custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 size_flags_horizontal = 3
 metadata/_edit_use_anchors_ = true
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/VBoxContainer/Footer"]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/VBoxContainer/Footer/MarginContainer"]
+layout_mode = 2
+
+[node name="StartWheel" type="Button" parent="Control/VBoxContainer/Footer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "Start"
+
+[node name="ClearWheel" type="Button" parent="Control/VBoxContainer/Footer/MarginContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+text = "Clear"
+
+[node name="WinnerScreen" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BG" type="ColorRect" parent="WinnerScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="WinnerScreen/BG"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="WinnerText" type="Label" parent="WinnerScreen/BG/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+material = SubResource("ShaderMaterial_v1gob")
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
+text = "Winner is"
+
+[node name="ActualWinner" type="Label" parent="WinnerScreen/BG/VBoxContainer"]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+material = SubResource("ShaderMaterial_jw32o")
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 32
+text = "Thing"
 
 [node name="Settings" type="Window" parent="."]
 title = "Settings"
@@ -218,11 +337,11 @@ theme = SubResource("Theme_pbw6q")
 current_tab = 0
 tab_focus_mode = 0
 
-[node name="TabBar" type="TabBar" parent="Settings/Control/TabContainer"]
+[node name="MainSettings" type="TabBar" parent="Settings/Control/TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 0
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Settings/Control/TabContainer/TabBar"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Settings/Control/TabContainer/MainSettings"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -230,7 +349,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -239,41 +358,46 @@ theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Wheel Spin Time (s)"
+
+[node name="SpinBox" type="SpinBox" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+min_value = 0.5
+step = 0.1
+value = 2.5
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "prop"
 
-[node name="SpinBox" type="SpinBox" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+[node name="CheckButton" type="CheckButton" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 10
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer3" type="HBoxContainer" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-text = "prop"
-
-[node name="CheckButton" type="CheckButton" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 10
-
-[node name="HBoxContainer3" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 text = "prop"
 
-[node name="OptionButton" type="OptionButton" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+[node name="OptionButton" type="OptionButton" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
 layout_mode = 2
 size_flags_horizontal = 10
 item_count = 2
@@ -282,22 +406,108 @@ popup/item_0/id = 0
 popup/item_1/text = "Item 2"
 popup/item_1/id = 1
 
-[node name="HBoxContainer4" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer4" type="HBoxContainer" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 text = "prop"
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+[node name="ColorPickerButton" type="ColorPickerButton" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
 layout_mode = 2
 size_flags_horizontal = 10
 text = "Color"
 
-[node name="HBoxContainer5" type="HBoxContainer" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer5" type="HBoxContainer" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer"]
+visible = false
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Settings/Control/TabContainer/TabBar/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5"]
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5"]
+layout_mode = 2
+text = "prop"
+
+[node name="Themes" type="TabBar" parent="Settings/Control/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Settings/Control/TabContainer/Themes"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Settings/Control/TabContainer/Themes/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "prop"
+
+[node name="SpinBox" type="SpinBox" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "prop"
+
+[node name="CheckButton" type="CheckButton" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 10
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+text = "prop"
+
+[node name="OptionButton" type="OptionButton" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 10
+item_count = 2
+popup/item_0/text = "Item 1"
+popup/item_0/id = 0
+popup/item_1/text = "Item 2"
+popup/item_1/id = 1
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+text = "prop"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer4"]
+layout_mode = 2
+size_flags_horizontal = 10
+text = "Color"
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Settings/Control/TabContainer/Themes/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer5"]
 layout_mode = 2
 text = "prop"
 

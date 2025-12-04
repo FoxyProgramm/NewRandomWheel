@@ -1,6 +1,6 @@
 extends Node
 
-var names:Array[String] = ["Pen", "Pineapple", "Apple"]
+var names:Array[String] = ["Pen", "Pineapple", "Apple", "SerGAY", "Lonselot", "Aboba", "Kampukter", "Rubilnik", "Volna", "Horse", "Pam pam pam", "REDISKAAA!!"]
 
 var free_indexes:Array[int] = []
 var currect_idx:int = 0
