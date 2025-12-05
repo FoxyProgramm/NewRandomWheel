@@ -51,13 +51,17 @@ func hue_redraw(color:Color, step:float) -> void:
 		tween.tween_property(part, "color", color, time_to_change).set_trans(Tween.TRANS_QUAD)
 		await get_tree().create_timer(time_for_part).timeout
 
-func create_beauty_part() -> Part:
+func create_beauty_part(name_:String = '', weight_:float = 1.0, color_:Color = Color.TRANSPARENT) -> Part:
 	var new_part = Global.create_part()
 	new_part.weight_changed.connect(calculate_parts)
 	new_part.weight = 0.001
+	
+	if name_: new_part.name = name_
+	if color_ != Color.TRANSPARENT: new_part.color = Color(color_)
+	
 	parts.append(new_part)
 	var tween := create_tween()
-	tween.tween_property(new_part, "weight", 1, 0.6).set_trans(Tween.TRANS_CUBIC)
+	tween.tween_property(new_part, "weight", weight_, 0.6).set_trans(Tween.TRANS_CUBIC)
 	return new_part
 
 func remove_beauty_part(part:Part, last_one:bool = false) -> void:
@@ -83,8 +87,11 @@ func change_beauty_weight(part:Part, weight:float) -> void:
 	part.tween.tween_property(part, "weight", weight, 0.6).set_trans(Tween.TRANS_QUAD)
 	
 
-#func _ready() -> void:
-	#calculate_parts()
+func _ready() -> void:
+	%SettingWheelQuality.value_changed.connect(func(v:float):
+		polygon_step = 1.0 / v
+		calculate_parts()
+	)
 
 func _draw() -> void:
 	for part in parts:
