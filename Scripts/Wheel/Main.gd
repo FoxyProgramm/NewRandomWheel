@@ -4,11 +4,23 @@ signal winner_screen_clicked
 
 var part_controller_scene:PackedScene = load("res://Scenes/PartController.tscn")
 var time_to_change_color:float = 0.6
+var rotating_tween:Tween
+var win_rotate:float
+var save_slots:int = 6
 
 func _ready() -> void:
 	
 	if !DirAccess.dir_exists_absolute("user://saves/"):
 		DirAccess.make_dir_absolute("user://saves")
+	
+	for i in range(save_slots):
+		var is_file := FileAccess.file_exists("user://saves/save_"+str(i)+".sv")
+		if (is_file):
+			%TopSavePreset.get_popup().add_item("Has Save")
+			%TopLoadPreset.get_popup().add_item("Load Save")
+		else :
+			%TopSavePreset.get_popup().add_item("Empty Save")
+			%TopLoadPreset.get_popup().add_item("Empty Save")
 	
 	%TopSavePreset.get_popup().id_pressed.connect(func(id:int):
 		var file := FileAccess.open("user://saves/save_"+str(id)+".sv", FileAccess.WRITE)
@@ -49,10 +61,7 @@ func _ready() -> void:
 			print("ERROR 15")
 	)
 	
-	%TopBarSettingsButton.pressed.connect(
-		func() :
-			$Settings.show()
-	)
+	%TopBarSettingsButton.pressed.connect($Settings.show)
 	
 	%AddPart.pressed.connect(add_part)
 	
@@ -79,6 +88,14 @@ func _ready() -> void:
 				await get_tree().create_timer(wait_step).timeout
 	)
 	
+	%FunctionsNormalizeWeights.pressed.connect(func():
+		var wait_step: float = time_to_change_color / float( %Wheel.parts.size() )
+		for child:Control in %PartsContainer.get_children():
+			if child is PartController:
+				child.weight_box.value = 1
+				await get_tree().create_timer(wait_step).timeout
+	)
+	
 	var functions_popup:PopupMenu = %TopBarFunctionsButton.get_popup()
 	for child:Window in $Functions.get_children():
 		functions_popup.add_item(child.title)
@@ -87,6 +104,10 @@ func _ready() -> void:
 	$WinnerScreen.gui_input.connect(func(e:InputEvent):
 		if e is InputEventMouseButton and e.pressed:
 			winner_screen_clicked.emit()
+	)
+	
+	%SkipWheelBtn.pressed.connect(func():
+		rotating_tween.set_speed_scale(%SettingWheelRotationTime.value)
 	)
 	
 	%StartWheel.pressed.connect(func():
@@ -98,14 +119,23 @@ func _ready() -> void:
 				winner = part
 				break
 			current_score += part.weight_linear
-		%Wheel.rotation -= PI*4*%SettingWheelRotationTime.value
+		win_rotate = (win_score*PI*2)-(PI/2)
+		%Wheel.rotation -= PI*4*ceil(%SettingWheelRotationTime.value)
 		%WinnerText.material.set('shader_parameter/y_offset', 48)
 		%ActualWinner.material.set('shader_parameter/y_offset', 64)
 		%ActualWinner.text = '4a6=F#O31oaF4'
+		rotating_tween = create_tween()
+		rotating_tween.tween_callback($WinnerScreen.show)
+		rotating_tween.tween_property(%Wheel, 'rotation', win_rotate, %SettingWheelRotationTime.value).set_trans(Tween.TRANS_CUBIC)
+		if %SettingWheelRotationTime.value > 10:
+			rotating_tween.parallel().tween_property(%SkipWheelBtn.material, 'shader_parameter/y_offset', 0, 0.5).set_delay(2.0).set_trans(Tween.TRANS_CUBIC)
+		
+		await rotating_tween.finished
+		rotating_tween.set_speed_scale(1)
+		
 		var wheel_tween:Tween = create_tween()
-		wheel_tween.tween_property(%Wheel, 'rotation', (win_score*PI*2)-(PI/2), %SettingWheelRotationTime.value).set_trans(Tween.TRANS_CUBIC)
-		wheel_tween.tween_callback($WinnerScreen.show)
 		wheel_tween.tween_property($WinnerScreen/BG, 'color', Color(0,0,0,0.5), 0.7).set_trans(Tween.TRANS_CUBIC)
+		wheel_tween.parallel().tween_property(%SkipWheelBtn.material, 'shader_parameter/y_offset', 126, 0.9).set_trans(Tween.TRANS_CUBIC)
 		wheel_tween.tween_property(%WinnerText, 'modulate', Color.WHITE, 0.7).set_trans(Tween.TRANS_CUBIC)
 		wheel_tween.parallel().tween_property(%WinnerText.material, 'shader_parameter/y_offset', 24, 0.5).set_trans(Tween.TRANS_CUBIC)
 		wheel_tween.tween_interval(0.2)
@@ -130,7 +160,9 @@ func add_part(name_:String = '', weight_:float = 1.0, color_:Color = Color.TRANS
 	var new_part_controller := part_controller_scene.instantiate()
 	new_part_controller.linked_part = new_part
 	%PartsContainer.add_child(new_part_controller)
+	new_part_controller.weight_box.value = weight_
+	new_part_controller.appear(%SettingsEnableBlocksAnimation.button_pressed)
 	new_part_controller.request_to_delete.connect(func():
 		%Wheel.remove_beauty_part(new_part_controller.linked_part)
-		new_part_controller.queue_free()
+		new_part_controller.die(%SettingsEnableBlocksAnimation.button_pressed)
 	)

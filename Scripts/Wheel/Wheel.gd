@@ -51,17 +51,21 @@ func hue_redraw(color:Color, step:float) -> void:
 		tween.tween_property(part, "color", color, time_to_change).set_trans(Tween.TRANS_QUAD)
 		await get_tree().create_timer(time_for_part).timeout
 
-func create_beauty_part(name_:String = '', weight_:float = 1.0, color_:Color = Color.TRANSPARENT) -> Part:
+func create_beauty_part(name_:String = '', weight_:float = 1.0, color_:Color = Color.TRANSPARENT, ghost:bool = false) -> Part:
 	var new_part = Global.create_part()
 	new_part.weight_changed.connect(calculate_parts)
 	new_part.weight = 0.001
 	
 	if name_: new_part.name = name_
 	if color_ != Color.TRANSPARENT: new_part.color = Color(color_)
+	if ghost: new_part.color = Color.TRANSPARENT
 	
 	parts.append(new_part)
+	Global.acrual_parts_size += 1
 	var tween := create_tween()
 	tween.tween_property(new_part, "weight", weight_, 0.6).set_trans(Tween.TRANS_CUBIC)
+	if Global.acrual_parts_size == 2:
+		tween.parallel().tween_property(parts[0], 'weight', 0, 0.6).set_trans(Tween.TRANS_CUBIC)
 	return new_part
 
 func remove_beauty_part(part:Part, last_one:bool = false) -> void:
@@ -72,9 +76,11 @@ func remove_beauty_part(part:Part, last_one:bool = false) -> void:
 			part = parts[i]
 			part.on_delete = true
 			break
-
+	Global.acrual_parts_size -= 1
 	var tween := create_tween()
 	tween.tween_property(part, "weight", 0.001, 0.6).set_trans(Tween.TRANS_QUAD)
+	if Global.acrual_parts_size == 1:
+		tween.parallel().tween_property(parts[0], 'weight', 1, 0.6).set_trans(Tween.TRANS_CUBIC)
 	await tween.finished
 	parts.erase(part)
 	part.weight_changed.disconnect(calculate_parts)
@@ -92,6 +98,8 @@ func _ready() -> void:
 		polygon_step = 1.0 / v
 		calculate_parts()
 	)
+	
+	create_beauty_part("", 1, Color.TRANSPARENT, true)
 
 func _draw() -> void:
 	for part in parts:

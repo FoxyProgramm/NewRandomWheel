@@ -4,6 +4,7 @@ var names:Array[String] = ["Pen", "Pineapple", "Apple", "SerGAY", "Lonselot", "A
 
 var free_indexes:Array[int] = []
 var currect_idx:int = 0
+var acrual_parts_size:int
 
 func create_part() -> Part:
 	var result := Part.new()

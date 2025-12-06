@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://csnf6j0m0e8iu"]
+[gd_scene load_steps=18 format=3 uid="uid://csnf6j0m0e8iu"]
 
 [ext_resource type="FontFile" uid="uid://042x6l8h7h68" path="res://Fonts/RobotoSlab-VariableFont_wght.ttf" id="1_pbw6q"]
 [ext_resource type="Script" uid="uid://n1aeksdjoxa2" path="res://Scripts/Wheel/Main.gd" id="1_r150o"]
@@ -12,6 +12,22 @@ default_font_size = 16
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_idj7w"]
 viewport_path = NodePath("SubViewport")
+
+[sub_resource type="Shader" id="Shader_jw32o"]
+code = "shader_type canvas_item;
+
+uniform float y_offset:hint_range(-64.0, 256.0, 0.01);
+
+void vertex() {
+	VERTEX.y += y_offset;
+}
+
+void fragment() {
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_50glp"]
+shader = SubResource("Shader_jw32o")
+shader_parameter/y_offset = 126.0
 
 [sub_resource type="Shader" id="Shader_pbw6q"]
 code = "shader_type canvas_item;
@@ -124,11 +140,6 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 text = "Save Preset"
-item_count = 2
-popup/item_0/text = "Empty Slot"
-popup/item_0/id = 0
-popup/item_1/text = "Empty Slot"
-popup/item_1/id = 1
 
 [node name="VSeparator" type="VSeparator" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
 layout_mode = 2
@@ -138,11 +149,6 @@ theme = ExtResource("3_kln2b")
 unique_name_in_owner = true
 layout_mode = 2
 text = "Load Preset"
-item_count = 2
-popup/item_0/text = "Empty Slot"
-popup/item_0/id = 0
-popup/item_1/text = "Empty Slot"
-popup/item_1/id = 1
 
 [node name="VSeparator2" type="VSeparator" parent="Control/VBoxContainer/TopBar/HBoxContainer"]
 layout_mode = 2
@@ -283,6 +289,24 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
 
+[node name="SkipWheelBtn" type="Button" parent="WinnerScreen/BG"]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_50glp")
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -21.0
+offset_top = -115.0
+offset_right = 21.0
+offset_bottom = -85.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Skip"
+flat = true
+
 [node name="VBoxContainer" type="VBoxContainer" parent="WinnerScreen/BG"]
 layout_mode = 1
 anchors_preset = 15
@@ -315,6 +339,7 @@ text = "Thing"
 title = "Settings"
 initial_position = 1
 size = Vector2i(600, 400)
+visible = false
 exclusive = true
 min_size = Vector2i(100, 100)
 script = ExtResource("4_rgh2o")
@@ -408,16 +433,18 @@ text = "0.5"
 horizontal_alignment = 2
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer"]
-visible = false
 layout_mode = 2
 
 [node name="Label" type="Label" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
 layout_mode = 2
-text = "prop"
+text = "Animation: Blocks appear / disappear"
 
-[node name="CheckButton" type="CheckButton" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+[node name="SettingsEnableBlocksAnimation" type="CheckButton" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 10
+button_pressed = true
+flat = true
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="Settings/Control/TabContainer/MainSettings/ScrollContainer/MarginContainer/VBoxContainer"]
 visible = false
@@ -665,3 +692,48 @@ ratio = 0.5
 unique_name_in_owner = true
 layout_mode = 2
 text = "Randomize"
+
+[node name="Normalize Weights" type="Window" parent="Functions"]
+auto_translate_mode = 1
+title = "Normalize Weights"
+position = Vector2i(0, 36)
+size = Vector2i(200, 100)
+visible = false
+script = ExtResource("4_rgh2o")
+
+[node name="MarginContainer" type="MarginContainer" parent="Functions/Normalize Weights"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 15
+
+[node name="Control" type="Control" parent="Functions/Normalize Weights"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="Functions/Normalize Weights/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Functions/Normalize Weights/Control/CenterContainer"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+ratio = 0.5
+
+[node name="FunctionsNormalizeWeights" type="Button" parent="Functions/Normalize Weights/Control/CenterContainer/AspectRatioContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Normalize"
